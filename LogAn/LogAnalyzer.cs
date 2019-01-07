@@ -6,7 +6,10 @@ namespace LogAn
     {
         public bool IsValidLogFileName(string fileName)
         {
-            if (!fileName.EndsWith(".SLF"))
+            //Allow StringComparison to be case-insensitive by changing culture from en-US-POSIX
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            
+            if (!fileName.EndsWith(".SLF", StringComparison.CurrentCultureIgnoreCase))
             {
                 return false;
             }
