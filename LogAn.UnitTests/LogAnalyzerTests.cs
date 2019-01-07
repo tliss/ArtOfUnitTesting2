@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace LogAn.UnitTests
@@ -5,12 +6,19 @@ namespace LogAn.UnitTests
     [TestFixture]
     public class LogAnalyzerTests
     {
+        
+        private LogAnalyzer la;
+        
+        [SetUp]
+        public void SetUp()
+        {
+            la = MakeAnalyzer();
+        }
+        
         [Test]
         public void IsValidFileName_BadExtension_ReturnsFalse()
         {
-            LogAnalyzer analyzer = new LogAnalyzer();
-            
-            bool result = analyzer.IsValidLogFileName("filewithbadextension.foo");
+            bool result = la.IsValidLogFileName("filewithbadextension.foo");
             
             Assert.False(result);
         }
@@ -19,11 +27,22 @@ namespace LogAn.UnitTests
         [TestCase("filewithgoodextension.slf")]
         public void IsValidLogFileName_ValidExtensions_ReturnsTrue(string file)
         {
-            LogAnalyzer analyzer = new LogAnalyzer();
-            
-            bool result = analyzer.IsValidLogFileName(file);
+            bool result = la.IsValidLogFileName(file);
             
             Assert.True(result);
+        }
+        
+        [Test]
+        public void IsValidFileName_EmptyFileName_Throws()
+        {
+            var ex = Assert.Catch<Exception>(() => la.IsValidLogFileName(""));
+            
+            StringAssert.Contains("filename has to be provided", ex.Message);
+        }
+        
+        private LogAnalyzer MakeAnalyzer()
+        {
+            return new LogAnalyzer();
         }
     }
 }
